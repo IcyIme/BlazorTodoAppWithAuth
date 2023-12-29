@@ -1,0 +1,30 @@
+﻿@page "/todo"
+@rendermode InteractiveServer
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject ITodoService TodoService
+
+<h3>TodoList</h3>
+
+@if (Todos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <FluentDataGrid Id="grid" GridTemplateColumns="1fr 1fr 4fr" TGridItem=TodoListModel>
+        <PropertyColumn Title="Id" Property="@(c => c!.Id)" Sortable="true" Align=Align.Start />
+        <PropertyColumn Title="Title" Property="@(c => c!.Title)" Sortable="true" Align=Align.Center />
+        <PropertyColumn Title="Description" Property="@(c => c!.Description)" Sortable="true" Align=Align.Center />
+    </FluentDataGrid>
+}
+
+
+@code {
+    List<TodoListModel> Todos = new List<TodoListModel>();
+    protected override async Task OnInitializedAsync()
+    {
+        Todos = await TodoService.GetAllTodosAsync();
+    }
+
+}
